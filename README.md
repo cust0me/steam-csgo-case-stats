@@ -13,3 +13,5 @@ Fetches your steam inventory history, and the parses the data to calculate how m
 5. Scroll to the bottom of the page, and click on: "Start fetching history"
 6. Once the script has finished loading, a text message will appear saying: **Finished fetching data!**
 7. You should now see your stats!
+
+![](https://github.com/cust0me/steam-csgo-case-stats/blob/main/image.png)
