@@ -10,12 +10,12 @@ function AddNewRow() {
 function AddButton( title, callback ) {
     var BottomSection = document.getElementsByClassName('load_more_history_area')[0];
 
-    var link = document.createElement("a");
+    var link        = document.createElement("a");
     link.onclick = callback;
 
-    var link_div = document.createElement("div");
-    link_div.className = 'btnv6_blue_hoverfade btn_medium';
-    link_div.style = 'display: inline-block; margin: 5px;';
+    var link_div    = document.createElement("div");
+    link_div.className  = 'btnv6_blue_hoverfade btn_medium';
+    link_div.style  = 'display: inline-block; margin: 5px;';
     link_div.textContent = title;
 
     link.appendChild(link_div);
@@ -61,9 +61,10 @@ function SumTotalAmountOfCases() {
     var totalCasesOpened = 0;
     var totalCapsulesOpened = 0;
     var totalPatchesOpened = 0;
+    var openedKnives = [];
 
     var historyEventDescriptions = document.getElementsByClassName("tradehistory_event_description");
-    for (i = 0; i < historyEventDescriptions.length; i++) {
+    for (let i = historyEventDescriptions.length - 1; i > 0; i--) {
         if(historyEventDescriptions[i].textContent.trim() == "Unlocked a container") {
             var parentElement = historyEventDescriptions[i].parentElement;
             if(parentElement.children[1].innerHTML.includes("Capsule"))
@@ -75,12 +76,24 @@ function SumTotalAmountOfCases() {
                 else
                     totalCasesOpened += 1;
             }
+
+            var openedItem = parentElement.children[2].children[1].children[0].children[1];
+            if(openedItem.innerHTML.includes("★")) {
+                var caseGap = totalCasesOpened;
+                if(openedKnives.length > 0)
+                    caseGap = totalCasesOpened - openedKnives[openedKnives.length - 1].caseID;
+
+                openedKnives.push( { elem: openedItem.innerHTML, casesSinceLastOpen: caseGap, caseID: totalCasesOpened } );
+            }
         }
     }
+
+    console.log(openedKnives);
 
     TotalCasesText.innerHTML = "Total cases: " + totalCasesOpened;
     TotalCapsulesText.innerHTML = "Total capsules: " + totalCapsulesOpened;
     TotalPatchesText.innerHTML = "Total patches: " + totalPatchesOpened;
+    TotalKnivesOpened.innerHTML = "Opened knives: <br>" + openedKnives.map( (e) =>  "It took you <b>" + e.caseID + "</b> cases to open the <p style=\"color: #8650AC;display: inline;\">" + e.elem + "</p>. This was opened <b>" + e.casesSinceLastOpen + "</b> cases after the previous knife<br>" ).join('');
 }
 
 AddNewRow();
@@ -90,3 +103,4 @@ AddButton("Sum total amount of cases", SumTotalAmountOfCases);
 let TotalCasesText = AddNewParagraph("Total cases: 0");
 let TotalCapsulesText = AddNewParagraph("Total capsules: 0");
 let TotalPatchesText = AddNewParagraph("Total patches: 0");
+let TotalKnivesOpened = AddNewParagraph("Opened knives: ");
