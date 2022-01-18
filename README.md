@@ -15,3 +15,7 @@ Fetches your steam inventory history, and the parses the data to calculate how m
 7. You should now see your stats!
 
 ![](https://github.com/cust0me/steam-csgo-case-stats/blob/main/image.png)
+
+Preview of knives opened
+
+![](https://github.com/cust0me/steam-csgo-case-stats/blob/main/unknown.png)
