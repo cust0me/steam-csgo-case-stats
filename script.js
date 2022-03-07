@@ -43,14 +43,14 @@ function FetchHistory() {
             return;
         }
 
-        timeoutHandle = setTimeout(FetchHistory, 3500);
+        timeoutHandle = setTimeout(FetchHistory, 3000);
         return;
     }
 
     triesWhereLoadButtonIsHidden = 0;
     LoadButton.click();
 
-    timeoutHandle = setTimeout(FetchHistory, 3500);
+    timeoutHandle = setTimeout(FetchHistory, 2000);
 }
 
 function StopFetchingHistory() {
@@ -61,22 +61,29 @@ function SumTotalAmountOfCases() {
     var totalCasesOpened = 0;
     var totalCapsulesOpened = 0;
     var totalPatchesOpened = 0;
+    var totalMissionRewards = 0;
     var openedKnives = [];
 
     var historyEventDescriptions = document.getElementsByClassName("tradehistory_event_description");
-    for (let i = historyEventDescriptions.length - 1; i > 0; i--) {
-        if(historyEventDescriptions[i].textContent.trim() == "Unlocked a container") {
+    for (let i = historyEventDescriptions.length - 1; i > 0; i--) 
+    {
+        let historyEventDescription = historyEventDescriptions[i].textContent.trim();
+        if(historyEventDescription == "Unlocked a container") 
+        {
             var parentElement = historyEventDescriptions[i].parentElement;
-            if(parentElement.children[1].innerHTML.includes("Capsule"))
+            if(parentElement.children[1].innerHTML.includes("Capsule")) {
                 totalCapsulesOpened += 1;
+            }
             else
             {
-                if(parentElement.children[1].innerHTML.includes("Patch"))
+                if(parentElement.children[1].innerHTML.includes("Patch")) {
                     totalPatchesOpened += 1;
-                else
+                }
+                else {
                     totalCasesOpened += 1;
+                }
             }
-
+            
             var openedItem = parentElement.children[2].children[1].children[0].children[1];
             if(openedItem.innerHTML.includes("★")) {
                 var caseGap = totalCasesOpened;
@@ -86,6 +93,11 @@ function SumTotalAmountOfCases() {
                 openedKnives.push( { elem: openedItem.innerHTML, casesSinceLastOpen: caseGap, caseID: totalCasesOpened } );
             }
         }
+        else{
+            if(historyEventDescription == "Mission reward") {
+                totalMissionRewards += 1;
+            }
+        }
     }
 
     console.log(openedKnives);
@@ -93,6 +105,7 @@ function SumTotalAmountOfCases() {
     TotalCasesText.innerHTML = "Total cases: " + totalCasesOpened;
     TotalCapsulesText.innerHTML = "Total capsules: " + totalCapsulesOpened;
     TotalPatchesText.innerHTML = "Total patches: " + totalPatchesOpened;
+    TotalMissionRewardsText.innerHTML = "Total mission rewards: " + totalMissionRewards;
     TotalKnivesOpened.innerHTML = "Opened knives: <br>" + openedKnives.map( (e) =>  "It took you <b>" + e.caseID + "</b> cases to open the <p style=\"color: #8650AC;display: inline;\">" + e.elem + "</p>. This was opened <b>" + e.casesSinceLastOpen + "</b> cases after the previous knife<br>" ).join('');
 }
 
@@ -100,7 +113,9 @@ AddNewRow();
 AddButton("Start fetching history", FetchHistory);
 AddButton("Stop fetching history", StopFetchingHistory);
 AddButton("Sum total amount of cases", SumTotalAmountOfCases);
+
 let TotalCasesText = AddNewParagraph("Total cases: 0");
 let TotalCapsulesText = AddNewParagraph("Total capsules: 0");
 let TotalPatchesText = AddNewParagraph("Total patches: 0");
+let TotalMissionRewardsText = AddNewParagraph("Total mission rewards: 0");
 let TotalKnivesOpened = AddNewParagraph("Opened knives: ");
